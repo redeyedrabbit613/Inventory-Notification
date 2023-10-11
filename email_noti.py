@@ -10,14 +10,31 @@ def send_noti(min_value, max_value):
     recipient_email = 'mailertesta2@gmail.com' # Replace with the recipient's email
     smtp_server = 'smtp.example.com'          # Replace with your SMTP server
     smtp_port = 587                          # Replace with your SMTP server's port (usually 587 for TLS)
-
+    
+    # Read from a .txt file
     try:
-        min_value = int(min_value)  # Convert to integer
-        max_value = int(max_value)  # Convert to integer
+        with open('reagents.txt', 'r') as file:
+            data_string = file.read()
+    except FileNotFoundError:
+        print('Error: The file "reagents.txt" was not found.')
+        exit(1)
+
+    # Convert the string to a dictionary
+    try:
+        reagents = ast.literal_eval(data_string)
+        min_value = min(reagents.values())
+        max_value = max(reagents.values())
+        if not isinstance(reagents, dict):
+            raise ValueError('The file does not contain a valid dictionary.')
+    except (ValueError, SyntaxError):
+        print('Error: Unable to convert the file content to a dictionary.')
+        exit(1)
+    try:
+        min_value = int(min_value)
+        max_value = int(max_value)
     except ValueError:
         print('Error: Unable to convert values to integers.')
-        exit(1)
-        
+        exit(1) 
     if min_value < max_value / 2:
         subject = "Alert: It's Time to Order More Reagents"
         body = f'Please order more reagents. Inventory has dropped below halfway point.'
@@ -51,19 +68,21 @@ except FileNotFoundError:
 
 # Convert the string to a dictionary
 try:
-    data_dict = ast.literal_eval(data_string)
-    if not isinstance(data_dict, dict):
+    reagents = ast.literal_eval(data_string)
+    print(reagents)
+    min_value = min(reagents.values())
+    max_value = max(reagents.values())
+    if not isinstance(reagents, dict):
         raise ValueError('The file does not contain a valid dictionary.')
 except (ValueError, SyntaxError):
     print('Error: Unable to convert the file content to a dictionary.')
     exit(1)
-
-# Identify min and max values from the dictionary
-min_value = min(data_dict.values())
-max_value = max(data_dict.values())
-
-print(f'Minimum Value: {min_value}')
-print(f'Maximum Value: {max_value}')
+try:
+    min_value = int(min_value)
+    max_value = int(max_value)
+except ValueError:
+    print('Error: Unable to convert values to integers.')
+    exit(1)
 
 # Send an email notification if min < max / 2
 send_noti(min_value, max_value)
