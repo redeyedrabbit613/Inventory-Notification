@@ -4,7 +4,7 @@ from email_noti import send_noti
 from txt_func import write_txt
 from txt_func import read_txt
 
-#reagents ={'clv': '0', 'IMG':'0', 'EXA': '0', 'EXB': '0', 'RTN': '0','RIP': '0', 'SIP': '0', 'CSR': '0', 'RXP':'0',}
+#reagents ={'CLV': '0', 'IMG':'0', 'EXA': '0', 'EXB': '0', 'RTN': '0','RIP': '0', 'SIP': '0', 'CSR': '0', 'RXP':'0',}
 
 
 prmpt = ('To check inventory enter "1"'
@@ -22,8 +22,6 @@ for res in prmpt_input:
         except FileNotFoundError:
             print('Error: The file "reagents.txt" was not found.')
             exit(1)
-
-        # Convert the string to a dictionary
         try:
             reagents = ast.literal_eval(data_string)
         except (ValueError, SyntaxError):
@@ -40,19 +38,17 @@ for res in prmpt_input:
         except FileNotFoundError:
             print('Error: The file "reagents.txt" was not found.')
             exit(1)
-
-        # Convert the string to a dictionary
         try:
             reagents = ast.literal_eval(data_string)
         except (ValueError, SyntaxError):
             print('Error: Unable to convert the file content to a dictionary.')
         add_key = input('What reagent would you like to add to the inventory list: ')
         reagents[add_key] = 0
-        add_keyinv = input('How many would you like to add to the inventory: ')
-        add_keyinv = int(add_keyinv)
+        add_keyinv = int(input('How many would you like to add to the inventory: '))
         reagents[add_key] = int(reagents[add_key])
-        reagents[add_key] = reagents[add_key] + add_keyinv
-        write_txt()
+        new_num = reagents[add_key] + add_keyinv 
+        reagents[add_key] = str(new_num)
+        write_txt(reagents)
         print(reagents)
         break
     if res == '3':
@@ -62,8 +58,6 @@ for res in prmpt_input:
         except FileNotFoundError:
             print('Error: The file "reagents.txt" was not found.')
             exit(1)
-
-        # Convert the string to a dictionary
         try:
             reagents = ast.literal_eval(data_string)
         except (ValueError, SyntaxError):
@@ -73,7 +67,7 @@ for res in prmpt_input:
         add_keyinv = int(add_keyinv)
         slct_reag = int(reagents[add_reag])
         new_inv = slct_reag + add_keyinv
-        reagents[add_reag] = new_inv
+        reagents[add_reag] = str(new_inv)
         write_txt(reagents)
         print(reagents)
         break
@@ -84,8 +78,6 @@ for res in prmpt_input:
         except FileNotFoundError:
             print('Error: The file "reagents.txt" was not found.')
             exit(1)
-
-        # Convert the string to a dictionary
         try:
             reagents = ast.literal_eval(data_string)
         except (ValueError, SyntaxError):
@@ -95,6 +87,8 @@ for res in prmpt_input:
         sub_keyinv = int(sub_keyinv)
         slct_reag = int(reagents[sub_reag])
         new_inv = slct_reag - sub_keyinv
-        reagents[sub_reag] = new_inv
+        reagents[sub_reag] = str(new_inv)
+        write_txt(reagents)
+        send_noti(min_value, max_value)
         print(reagents)
         break

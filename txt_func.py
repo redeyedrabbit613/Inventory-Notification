@@ -1,9 +1,9 @@
 #This function will write the reagent list into a txt file.
-def write_txt():
+def write_txt(reagents):
     filename = 'reagents.txt'
     try:
-        with open(filename, 'w') as file_object:
-            reagents = str(reagents)    
+        with open(filename, 'w') as file_object:    
+            reagents = str(reagents)
             file_object.write(reagents)
     except FileNotFoundError:
         print('Error: The file "reagents.txt" was not found.')
